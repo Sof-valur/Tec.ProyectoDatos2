@@ -145,9 +145,6 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="json.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ResourceCompile Include="Project.rc" />
   </ItemGroup>
   <ItemGroup>
