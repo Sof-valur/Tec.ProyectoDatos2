@@ -51,10 +51,15 @@ char* getSendMessage(char* input) {
 }
 
 void initTablero(const Tarjeta tablero[4][4]) {
-	tablero = {};
+	//tablero = { {}, {}, {}, {} };
+	  
+	int fox = 0, dino= 0, gato = 0, rana = 0;
+	for (int i = 0; i < 16; i++)
+	{
+		int carta = 1 + (rand() % 4);
 
+	}
 
-	 
 }
 
 int main()
