@@ -115,7 +115,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="DemoServer.cpp" />
+    <ClCompile Include="json.cpp" />
+    <ClCompile Include="Source.cpp" />
     <ClCompile Include="Tarjeta.cpp" />
+    <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DemoServer.h" />

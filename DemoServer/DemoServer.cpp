@@ -1,18 +1,67 @@
 #include <future>
-#include <iostream>
-
-#include "DemoServer.h"
-
+#include <iostream>  
+#include "DemoServer.h" 
+#include "json.cpp"
+#include "Source.cpp"
+#include "utils.cpp"
+#include "Tarjeta.cpp"
+using namespace nlohmann;
 using namespace std;
 
 #pragma comment(lib, "Ws2_32.lib")
+ 
 
-char* getSendMessage() {
+struct CustomCommand {
+	std::string command;
+	std::string btn;
+};
+
+
+CustomCommand* parseCommand(std::string s) {
+
+	CustomCommand cmd = {
+	};
+	std::string delim = "|";
+
+	auto start = 0U;
+	auto end = s.find(delim);
+
+	cmd.command = s.substr(start, end - start);
+
+	start = end + delim.length();
+	end = s.find(delim, start);
+
+	cmd.btn = s.substr(start, end - start);
+	return &cmd;
+}
+
+std::string commandToString(CustomCommand* cmd) {
+	std::string result = cmd->command + "|" + cmd->btn;
+	return result;
+}
+
+char* getSendMessage(char* input) { 
+	std::string str;
+
+	str.assign(input);
+
+	auto cmd = parseCommand(str);
+
 	return "sup";
+}
+
+void initTablero(const Tarjeta tablero[4][4]) {
+	tablero = {};
+
+
+	 
 }
 
 int main()
 {
+	Tarjeta tablero[4][4];
+	initTablero(tablero);
+
 	WSADATA wsa_data;
 	SOCKADDR_IN server_addr, client_addr;
 
@@ -54,7 +103,7 @@ void on_client_connect(SOCKET client)
 
 	cout << "Client connected!" << endl;
 	recv(client, buffer, sizeof(buffer), 0);
-	char* msj = getSendMessage();
+	char* msj = getSendMessage(buffer);
 	send(client, msj, sizeof(msj), 0);
 	cout << "Client says: " << buffer << endl;
 	memset(buffer, 0, sizeof(buffer));

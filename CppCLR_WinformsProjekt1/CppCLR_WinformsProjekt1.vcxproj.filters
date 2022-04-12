@@ -49,12 +49,30 @@
     <ClCompile Include="ClientIO.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="..\Project\json.cpp">
-      <Filter>Quelldateien</Filter>
+    <ClCompile Include="json.cpp">
+      <Filter>Headerdateien</Filter>
+    </ClCompile>
+    <ClCompile Include="utils.cpp">
+      <Filter>Headerdateien</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="app.ico">
+      <Filter>Ressourcendateien</Filter>
+    </Image>
+    <Image Include="..\Project\rana.bmp">
+      <Filter>Ressourcendateien</Filter>
+    </Image>
+    <Image Include="..\Project\dino.bmp">
+      <Filter>Ressourcendateien</Filter>
+    </Image>
+    <Image Include="..\Project\fox.bmp">
+      <Filter>Ressourcendateien</Filter>
+    </Image>
+    <Image Include="..\Project\gato.bmp">
+      <Filter>Ressourcendateien</Filter>
+    </Image>
+    <Image Include="check2.png">
       <Filter>Ressourcendateien</Filter>
     </Image>
   </ItemGroup>

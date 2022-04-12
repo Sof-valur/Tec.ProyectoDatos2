@@ -150,21 +150,27 @@
     <ClInclude Include="Resource.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Project\json.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="ClientIO.cpp" />
     <ClCompile Include="ClienteIO.cpp" />
     <ClCompile Include="CppCLR_WinformsProjekt.cpp" />
     <ClCompile Include="Form1.cpp" />
+    <ClCompile Include="json.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\Project\dino.bmp" />
+    <Image Include="..\Project\fox.bmp" />
+    <Image Include="..\Project\gato.bmp" />
+    <Image Include="..\Project\rana.bmp" />
     <Image Include="app.ico" />
+    <Image Include="check2.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
