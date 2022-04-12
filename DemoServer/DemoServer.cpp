@@ -11,6 +11,8 @@ using namespace std;
 #pragma comment(lib, "Ws2_32.lib")
  
 
+int x_size = 4, y_size = 4;
+
 struct CustomCommand {
 	std::string command;
 	std::string btn;
@@ -48,23 +50,93 @@ char* getSendMessage(char* input) {
 	auto cmd = parseCommand(str);
 
 	return "sup";
+} 
+
+void Insert_into_2D_Array(Tarjeta** foo, Tarjeta insert,  int x_pos, int y_pos)
+{
+	if (x_pos < x_size && y_pos < y_size) {
+		foo[x_pos][y_pos] = insert;    // insert_value lost post func exit?
+	}
 }
 
-void initTablero(const Tarjeta tablero[4][4]) {
-	//tablero = { {}, {}, {}, {} };
-	  
-	int fox = 0, dino= 0, gato = 0, rana = 0;
-	for (int i = 0; i < 16; i++)
+void Init_2D_Array(Tarjeta** foo, int x_size, int y_size)
+{ 
+	    // new alloc mem lost post func exit ?
+	for (int i = 0;i < x_size;i++)
+	{
+		foo[i] = new Tarjeta[y_size];     // new alloc mem lost post func exit
+	}
+}
+
+
+void initTablero(Tarjeta** tablero) {
+	int fila = 0;
+	int col = 0;
+
+	int fox = 0, dino = 0, gato = 0, rana = 0;
+	while (fox < 2 || dino < 2 || gato < 2 || rana < 2)
 	{
 		int carta = 1 + (rand() % 4);
+		string tipoDeCarta = "";
+		switch (carta)
+		{
+		case 1:
+			if (fox < 2)
+			{
+				fox++;
+				tipoDeCarta = "fox";
+			}
+			break;
+		case 2:
+			if (dino < 2)
+			{
+				dino++;
+				tipoDeCarta = "dino";
+			}
+			break;
+		case 3:
+			if (gato < 2)
+			{
+				gato++;
+				tipoDeCarta = "gato";
+			}
+			break;
+		case 4:
+			if (rana < 2)
+			{
+				rana++;
+				tipoDeCarta = "rana";
+			}
+			break;
+		}
 
+		if (tipoDeCarta != "")
+		{
+			Tarjeta* t = new Tarjeta();
+			t->imagen = tipoDeCarta;
+			t->fila = fila;
+			t->columna = col;
+			Tarjeta tt = *t;
+			Insert_into_2D_Array(tablero, tt, fila, col);
+			
+			if (col < x_size - 1 )
+			{
+				col++;
+			}
+			else if (fila < y_size - 1)
+			{
+				fila++;
+				col = 0;
+			}
+		}
 	}
-
 }
 
 int main()
 {
-	Tarjeta tablero[4][4];
+
+	Tarjeta** tablero = new Tarjeta * [x_size];;
+	Init_2D_Array(tablero, x_size, y_size); 
 	initTablero(tablero);
 
 	WSADATA wsa_data;
