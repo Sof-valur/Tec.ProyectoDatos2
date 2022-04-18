@@ -73,10 +73,10 @@ void initTablero(Tarjeta** tablero) {
 	int fila = 0;
 	int col = 0;
 
-	int fox = 0, fox2 = 0, dino = 0, gato = 0, rana = 0;
+	int fox = 0, shiba = 0, duck = 0, dino = 0, drago = 0, fish = 0, gato = 0, rana = 0;
 	while (fila != y_size - 1 || col != x_size - 1)
 	{
-		int carta = 1 + (rand() % 4);
+		int carta = 1 + (rand() % 8);
 		string tipoDeCarta = "";
 		switch (carta)
 		{
@@ -106,6 +106,34 @@ void initTablero(Tarjeta** tablero) {
 			{
 				rana++;
 				tipoDeCarta = "rana";
+			}
+			break;
+		case 5:
+			if (shiba < 2)
+			{
+				shiba++;
+				tipoDeCarta = "shiba";
+			}
+			break;
+		case 6:
+			if (duck < 2)
+			{
+				duck++;
+				tipoDeCarta = "duck";
+			}
+			break;
+		case 7:
+			if (drago < 2)
+			{
+				drago++;
+				tipoDeCarta = "drago";
+			}
+			break;
+		case 8:
+			if (fish < 2)
+			{
+				fish++;
+				tipoDeCarta = "fish";
 			}
 			break;
 		}

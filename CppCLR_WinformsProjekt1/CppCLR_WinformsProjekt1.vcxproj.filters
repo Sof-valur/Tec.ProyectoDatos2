@@ -78,13 +78,13 @@
     <Image Include="imagenes\fox.bmp">
       <Filter>Ressourcendateien</Filter>
     </Image>
-    <Image Include="imagenes\fox2.bmp">
-      <Filter>Ressourcendateien</Filter>
-    </Image>
     <Image Include="imagenes\gato.bmp">
       <Filter>Ressourcendateien</Filter>
     </Image>
     <Image Include="imagenes\rana.bmp">
+      <Filter>Ressourcendateien</Filter>
+    </Image>
+    <Image Include="imagenes\shiba.bmp">
       <Filter>Ressourcendateien</Filter>
     </Image>
   </ItemGroup>
