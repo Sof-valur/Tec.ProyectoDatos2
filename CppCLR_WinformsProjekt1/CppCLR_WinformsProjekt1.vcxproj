@@ -165,12 +165,16 @@
     <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\Project\dino.bmp" />
-    <Image Include="..\Project\fox.bmp" />
-    <Image Include="..\Project\gato.bmp" />
-    <Image Include="..\Project\rana.bmp" />
     <Image Include="app.ico" />
     <Image Include="check2.png" />
+    <Image Include="imagenes\dino.bmp" />
+    <Image Include="imagenes\drago.bmp" />
+    <Image Include="imagenes\duck.bmp" />
+    <Image Include="imagenes\Fish.bmp" />
+    <Image Include="imagenes\fox.bmp" />
+    <Image Include="imagenes\fox2.bmp" />
+    <Image Include="imagenes\gato.bmp" />
+    <Image Include="imagenes\rana.bmp" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

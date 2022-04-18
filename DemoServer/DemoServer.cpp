@@ -73,8 +73,8 @@ void initTablero(Tarjeta** tablero) {
 	int fila = 0;
 	int col = 0;
 
-	int fox = 0, dino = 0, gato = 0, rana = 0;
-	while (fox < 2 || dino < 2 || gato < 2 || rana < 2)
+	int fox = 0, fox2 = 0, dino = 0, gato = 0, rana = 0;
+	while (fila != y_size - 1 || col != x_size - 1)
 	{
 		int carta = 1 + (rand() % 4);
 		string tipoDeCarta = "";
