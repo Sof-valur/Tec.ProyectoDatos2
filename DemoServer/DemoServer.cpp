@@ -12,6 +12,7 @@ using namespace std;
  
 
 int x_size = 4, y_size = 4;
+Tarjeta** tablero;
 
 struct CustomCommand {
 	std::string command;
@@ -19,7 +20,7 @@ struct CustomCommand {
 };
 
 
-CustomCommand* parseCommand(std::string s) {
+CustomCommand parseCommand(std::string s) {
 
 	CustomCommand cmd = {
 	};
@@ -34,7 +35,7 @@ CustomCommand* parseCommand(std::string s) {
 	end = s.find(delim, start);
 
 	cmd.btn = s.substr(start, end - start);
-	return &cmd;
+	return cmd;
 }
 
 std::string commandToString(CustomCommand* cmd) {
@@ -47,8 +48,29 @@ char* getSendMessage(char* input) {
 
 	str.assign(input);
 
-	auto cmd = parseCommand(str);
+	CustomCommand cmd = parseCommand(str);
+	if (cmd.command == "Click")
+	{
 
+		std::string delim = "x";
+
+		auto start = 0U;
+		auto end = cmd.btn.find(delim);
+
+		std::string col = cmd.btn.substr(start, end - start);
+
+		start = end + delim.length();
+		end = cmd.btn.find(delim, start);
+		
+		std::string fil = cmd.btn.substr(start, end - start);
+
+		int colInt = std::atoi(col.c_str());
+		int filInt = std::atoi(fil.c_str());
+
+		Tarjeta tarjeta = tablero[filInt][colInt];
+		char* result = _strdup(tarjeta.imagen.c_str());
+		return result;
+	}
 	return "sup";
 } 
 
@@ -74,7 +96,7 @@ void initTablero(Tarjeta** tablero) {
 	int col = 0;
 
 	int fox = 0, shiba = 0, duck = 0, dino = 0, drago = 0, fish = 0, gato = 0, rana = 0;
-	while (fila != y_size - 1 || col != x_size - 1)
+	while (fila != y_size)
 	{
 		int carta = 1 + (rand() % 8);
 		string tipoDeCarta = "";
@@ -156,14 +178,17 @@ void initTablero(Tarjeta** tablero) {
 				fila++;
 				col = 0;
 			}
-		}
+			else if (fila == y_size - 1 && col == x_size - 1)
+			{
+				fila++; 
+			}
+		} 
 	}
 }
 
 int main()
 {
-
-	Tarjeta** tablero = new Tarjeta * [x_size];;
+	tablero = new Tarjeta * [x_size];;
 	Init_2D_Array(tablero, x_size, y_size); 
 	initTablero(tablero);
 

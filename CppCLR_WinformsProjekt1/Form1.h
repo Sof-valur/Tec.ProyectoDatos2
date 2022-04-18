@@ -9,6 +9,7 @@
 #include <iostream>  
 #include <vcclr.h>
 #include <string>   
+#include <string>
 // Need to link with Ws2_32.lib, Mswsock.lib, and Advapi32.lib
 #pragma comment (lib, "Ws2_32.lib")
 #pragma comment (lib, "Mswsock.lib")
@@ -53,7 +54,7 @@ namespace CppCLRWinformsProjekt {
 	}
 
 	std::string commandToString(CustomCommand* cmd) {
-		std::string result = cmd->command + "|" + cmd->btn;
+		std::string result = cmd->command + "|" + cmd->btn + "|";
 		return result;
 	}
 
@@ -89,6 +90,7 @@ namespace CppCLRWinformsProjekt {
 		{
 			InitializeComponent();
 			this->pnl_game->Enabled = false;
+
 			int columnasAncho = 1 * columnas / 100;
 			int filasAncho = 1 * filas / 100;
 			this->tablero = (gcnew System::Windows::Forms::TableLayoutPanel());
@@ -127,30 +129,64 @@ namespace CppCLRWinformsProjekt {
 			this->tablero->Show();
 		}
 
+#define DEFAULT_BUFLEN 512
 	private: System::Windows::Forms::Button^ createButton(int columna, int fila) {
 		System::Windows::Forms::Button^ result = (gcnew System::Windows::Forms::Button());
 		result->Location = System::Drawing::Point(261, 3);
 		result->Name = columna + L"x" + fila;
 		result->Size = System::Drawing::Size(50, 50);
-		result->TabIndex = 0;
-		result->Text = columna + L"x" + fila;
+		result->TabIndex = 0; 
 		result->UseVisualStyleBackColor = true;
 		result->Click += gcnew System::EventHandler(this, &Form1::button2_Click);
+		result->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Stretch;
 		return result;
 	}
-		   System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
-			   System::Windows::Forms::Button^ btn = ((System::Windows::Forms::Button^)sender);
-			   char* str1 = (char*)(void*)Marshal::StringToHGlobalAnsi(btn->Text);
-			   CustomCommand cmd = {};
-			   cmd.command = "Click";
-			   cmd.btn = str1;
-			   std::string mS = commandToString(&cmd);
-			   main2(mS);
-		   }
+		System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
+			System::Windows::Forms::Button^ btn = ((System::Windows::Forms::Button^)sender);
+			char* str1 = (char*)(void*)Marshal::StringToHGlobalAnsi(btn->Name);
+			CustomCommand cmd = {};
+			cmd.command = "Click";
+			cmd.btn = str1;
+			std::string mS = commandToString(&cmd);
+			std::string res = llamarSocket(mS);
+			std::string img("imagenes\\|.bmp");
+			size_t start_pos = img.find("|");
+			img.replace(start_pos, 1, res);
+			String^ re = gcnew String(img.c_str());
+			re += ".bmp";
+			btn->BackgroundImage = Image::FromFile(re);
+			//this->dibujarTablero();
+		}
 
-#define DEFAULT_BUFLEN 512
+		void dibujarTablero() {
+
+			this->tablero->Controls->Clear();
+
+			int columnasAncho = 1 * columnas / 100;
+			int filasAncho = 1 * filas / 100;
+			for (int i = 0; i < columnas; i++)
+			{
+				this->tablero->ColumnStyles->Add((gcnew System::Windows::Forms::ColumnStyle(System::Windows::Forms::SizeType::Percent, columnasAncho)));
+			}
+
+			for (int i = 0; i < filas; i++)
+			{
+				this->tablero->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, filasAncho)));
+			}
+
+			for (int col = 0; col < columnas; col++)
+			{
+				for (int fil = 0; fil < filas; fil++)
+				{
+					this->tablero->Controls->Add(createButton(col, fil), col, fil);
+				}
+			}
+			this->tablero->ResumeLayout(false);
+			this->tablero->BringToFront();
+		}
+
 #define DEFAULT_PORT "5555"
-		   int main2(std::string sendbuf)
+		   std::string llamarSocket(std::string sendbuf)
 		   {
 			   WSADATA wsaData;
 			   SOCKET ConnectSocket = INVALID_SOCKET;
@@ -166,7 +202,7 @@ namespace CppCLRWinformsProjekt {
 			   iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
 			   if (iResult != 0) {
 				   agregarMensaje("WSAStartup failed with error: %d\n", iResult);
-				   return 1;
+				   return "1";
 			   }
 
 			   ZeroMemory(&hints, sizeof(hints));
@@ -179,7 +215,7 @@ namespace CppCLRWinformsProjekt {
 			   if (iResult != 0) {
 				   agregarMensaje("getaddrinfo failed with error: %d\n", iResult);
 				   WSACleanup();
-				   return 1;
+				   return "";
 			   }
 
 			   // Attempt to connect to an address until one succeeds
@@ -191,7 +227,7 @@ namespace CppCLRWinformsProjekt {
 				   if (ConnectSocket == INVALID_SOCKET) {
 					   agregarMensaje("socket failed with error: %ld\n", WSAGetLastError());
 					   WSACleanup();
-					   return 1;
+					   return "1";
 				   }
 
 				   // Connect to server.
@@ -209,7 +245,7 @@ namespace CppCLRWinformsProjekt {
 			   if (ConnectSocket == INVALID_SOCKET) {
 				   agregarMensaje("Unable to connect to server!");
 				   WSACleanup();
-				   return 1;
+				   return "1";
 			   }
 
 			   // Send an initial buffer
@@ -218,7 +254,7 @@ namespace CppCLRWinformsProjekt {
 				   agregarMensaje("send failed with error: ", WSAGetLastError());
 				   closesocket(ConnectSocket);
 				   WSACleanup();
-				   return 1;
+				   return "1";
 			   }
 
 			   agregarMensaje("Bytes Sent:", iResult);
@@ -230,7 +266,7 @@ namespace CppCLRWinformsProjekt {
 				   agregarMensaje("shutdown failed with error: ", WSAGetLastError());
 				   closesocket(ConnectSocket);
 				   WSACleanup();
-				   return 1;
+				   return "1";
 			   }
 
 			   // Receive until the peer closes the connection
@@ -251,10 +287,19 @@ namespace CppCLRWinformsProjekt {
 			   // cleanup
 			   closesocket(ConnectSocket);
 			   WSACleanup();
-
-			   return 0;
+			    
+			   return this->convertToString(recvbuf, 512);
 		   }
 
+		   std::string convertToString(char* a, int size)
+		   {
+			   int i;
+			   std::string s = "";
+			   for (i = 0; i < size; i++) {
+				   s = s + a[i];
+			   }
+			   return s;
+		   }
 
 		   void agregarMensaje(const char* msj) {
 			   this->rtb_resumen->Text += "\n";
@@ -306,6 +351,7 @@ namespace CppCLRWinformsProjekt {
 		/// </summary>
 		void InitializeComponent(void)
 		{
+			System::ComponentModel::ComponentResourceManager^ resources = (gcnew System::ComponentModel::ComponentResourceManager(Form1::typeid));
 			this->tablero = (gcnew System::Windows::Forms::TableLayoutPanel());
 			this->rtb_resumen = (gcnew System::Windows::Forms::RichTextBox());
 			this->txtUsuario1 = (gcnew System::Windows::Forms::TextBox());
