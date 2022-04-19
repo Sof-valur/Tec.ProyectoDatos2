@@ -31,7 +31,7 @@ namespace CppCLRWinformsProjekt {
 
 	struct CustomCommand {
 		std::string command;
-		std::string btn;
+		std::string btn; 
 	};
 
 
@@ -63,7 +63,9 @@ namespace CppCLRWinformsProjekt {
 	/// </summary>
 	public ref class Form1 : public System::Windows::Forms::Form
 	{
+		int cartasAbiertas = 0;
 		int filas = 4;
+		int turnoJ = 0;
 	private: System::Windows::Forms::RichTextBox^ rtb_resumen;
 	private: System::Windows::Forms::TextBox^ txtUsuario1;
 	private: System::Windows::Forms::TextBox^ txtUsuario2;
@@ -141,7 +143,15 @@ namespace CppCLRWinformsProjekt {
 		result->BackgroundImageLayout = System::Windows::Forms::ImageLayout::Stretch;
 		return result;
 	}
-		System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) {
+
+		System::Void button2_Click(System::Object^ sender, System::EventArgs^ e) { 
+			if (cartasAbiertas == -1)
+			{
+				cartasAbiertas++;
+				this->dibujarTablero();
+				return;
+			}
+
 			System::Windows::Forms::Button^ btn = ((System::Windows::Forms::Button^)sender);
 			char* str1 = (char*)(void*)Marshal::StringToHGlobalAnsi(btn->Name);
 			CustomCommand cmd = {};
@@ -155,7 +165,42 @@ namespace CppCLRWinformsProjekt {
 			String^ re = gcnew String(img.c_str());
 			re += ".bmp";
 			btn->BackgroundImage = Image::FromFile(re);
-			//this->dibujarTablero();
+
+			cartasAbiertas++;
+			if (cartasAbiertas == 2)
+			{
+				CustomCommand cmd2 = {};
+				cmd2.command = "Check";
+				cmd2.btn = std::to_string(turnoJ);
+
+				std::string mS = commandToString(&cmd2);
+				std::string res = llamarSocket(mS); 
+
+
+				std::string delim = "|";
+
+				auto start = 0U;
+				auto end = res.find(delim);
+
+				auto subs1 = res.substr(start, end - start);
+				this->setPuntos(1, std::atoi(subs1.c_str()));
+
+				start = end + delim.length();
+				end = res.find(delim, start);
+
+				auto subs2 = res.substr(start, end - start);
+				this->setPuntos(2, std::atoi(subs2.c_str()));
+
+				start = end + delim.length();
+				end = res.find(delim, start);
+
+				auto subs3 = res.substr(start, end - start);
+				if (std::atoi(subs3.c_str()) == 0)
+				{
+					this->cambiarTurno();
+				}
+				cartasAbiertas = -1;
+			}
 		}
 
 		void dibujarTablero() {
@@ -172,7 +217,7 @@ namespace CppCLRWinformsProjekt {
 			for (int i = 0; i < filas; i++)
 			{
 				this->tablero->RowStyles->Add((gcnew System::Windows::Forms::RowStyle(System::Windows::Forms::SizeType::Percent, filasAncho)));
-			}
+			} 
 
 			for (int col = 0; col < columnas; col++)
 			{
@@ -598,29 +643,33 @@ namespace CppCLRWinformsProjekt {
 			this->turno_j1->Visible = false;
 			this->turno_j2->Visible = true;
 		}
+		this->turnoJ = jugador;
+	}
+
+	private: void cambiarTurno() {
+		bool jugador = this->turnoJ;
+		if (jugador == 1)
+		{
+			this->turno_j1->Visible = true;
+			this->turno_j2->Visible = false;
+			this->turnoJ = 0;
+		}
+		else {
+			this->turno_j1->Visible = false;
+			this->turno_j2->Visible = true;
+			this->turnoJ = 1;
+		}
 	}
 
 
-	private: void setPuntos(int jugador, bool mas) {
+	private: void setPuntos(int jugador, int pts) {
 		if (jugador == 1)
 		{
-			if (mas)
-			{
-				this->pts_1++;
-			}
-			else {
-				this->pts_1--;
-			}
+			this->pts_1 = pts;
 			this->lbl_pts_j1->Text = this->pts_1.ToString();
 		}
 		else {
-			if (mas)
-			{
-				this->pts_2++;
-			}
-			else {
-				this->pts_2--;
-			}
+			this->pts_2 = pts;
 			this->lbl_pts_j2->Text = this->pts_2.ToString();
 		}
 	}

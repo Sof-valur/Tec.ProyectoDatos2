@@ -13,6 +13,11 @@ using namespace std;
 
 int x_size = 4, y_size = 4;
 Tarjeta** tablero;
+int tarjetasAbiertas = 0;
+Tarjeta t1;
+Tarjeta t2;
+int puntosJ1 = 0;
+int puntosJ2 = 0; 
 
 struct CustomCommand {
 	std::string command;
@@ -69,6 +74,38 @@ char* getSendMessage(char* input) {
 
 		Tarjeta tarjeta = tablero[filInt][colInt];
 		char* result = _strdup(tarjeta.imagen.c_str());
+		switch (tarjetasAbiertas)
+		{
+		case 0:
+			t1 = tarjeta;
+			break; 
+		default: 
+			t2 = tarjeta; 
+			break;
+		}
+		tarjetasAbiertas++;
+		char* result2 = _strdup(tarjeta.imagen.c_str());
+
+		return result2;
+	}
+
+	if (cmd.command == "Check")
+	{
+		bool parejas = t1.imagen == t2.imagen;
+		if (parejas)
+		{
+			if (cmd.btn == "0")
+			{
+				puntosJ1++;
+			}
+			else {
+				puntosJ2++;
+			}
+		}
+		tarjetasAbiertas = 0;
+		std::string str = std::to_string(puntosJ1) + "|" + std::to_string(puntosJ2);
+		str += "|" + std::to_string(parejas);
+		char* result = _strdup(str.c_str());
 		return result;
 	}
 	return "sup";
